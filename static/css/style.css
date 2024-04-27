@@ -1,0 +1,209 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas,
+    'Courier New', monospace;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dark-mode {
+  background-color: black;
+}
+
+.dark-mode h1 {
+  color: white;
+}
+
+.container {
+  max-width: 960px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 15px;
+  padding-left: 15px;
+  min-height: 100vh;
+}
+
+.notes-list {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(250px, 1fr)
+  );
+}
+
+.note.new {
+  background-color: #67d7cc;
+}
+
+textarea {
+  border: none;
+  resize: none;
+  background-color: #67d7cc;
+}
+
+textarea:focus {
+  outline: none;
+}
+
+.save {
+  background-color: #e1e1e1;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px 5px 10px;
+}
+
+.save:hover {
+  background-color: #ededed;
+  cursor: pointer;
+}
+
+.note {
+  background-color: #fef68a;
+  border-radius: 10px;
+  padding: 1rem;
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.note-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+}
+
+.note-footer-bth {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-container {
+  display: flex;
+  gap: 20px;
+  height: 34px;
+  margin-bottom: 24px;
+}
+
+.search {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  background-color: rgb(233, 233, 233);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.search input {
+  border: none;
+  background-color: rgb(233, 233, 233);
+  width: 100%;
+}
+
+.search input:focus {
+  outline: none;
+}
+
+.note-footer {
+    display: flex;
+    align-items: center;
+}
+
+.new-note-footer {
+    display: flex;
+    align-items: center;
+}
+
+/* Стилі для тексту "Category:" */
+.new-note-footer::before {
+/*     content: "Category:"; */
+    margin-right: 10px;
+}
+
+select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: min-content;
+  background-color: #fff; /* Фоновий колір */
+  cursor: pointer;
+}
+
+/* Зміна стилю при наведенні на випадаючий список */
+select:hover {
+    border-color: #007bff; /* Зміна коліру рамки при наведенні */
+}
+
+/* Зміна стилю при фокусі на випадаючий список */
+select:focus {
+    outline: none; /* Видалення синього обведення при фокусі */
+    border-color: #007bff; /* Зміна коліру рамки при фокусі */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Додавання ефекту тіні */
+}
+
+.color-picker {
+    display: flex;
+    justify-content: space-between;
+}
+
+.color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* Зміна стилю при наведенні на кружечок */
+.color:hover {
+    border: 2px solid #000;
+}
+
+.category-selector{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-right: 10px
+}
+.category-label {
+  display: flex;
+  align-items: center;
+  height: min-content;
+}
+
+a {
+  text-decoration: none;
+  width: 24px;
+  height: 24px;
+}
+
+.color:nth-child(1) { background-color: #ff0000; }
+.color:nth-child(2) { background-color: #00ff00; }
+.color:nth-child(3) { background-color: #0000ff; }
+.color:nth-child(4) { background-color: #ffff00; }
+.color:nth-child(5) { background-color: #ff00ff; }
+
+
+/*.popup-create-categoty{*/
+/*  position: fixed;*/
+/*  left: 0;*/
+/*  top: 0;*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  z-index: 99998;*/
+/*  background-color: rgba(0, 0, 0, .3);*/
+/*}*/
