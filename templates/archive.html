@@ -12,18 +12,18 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1>Notes</h1>
+    <h1><a style="color: black" href="{% url "home" %}">Notes</a></h1>
     <div class="header-bth">
       <button class="save" id="create-category-btn">Create new category</button>
-      <button class="save"><a href="{% url "get-archive" %}">Archive</a></button>
+      <button class="save"><a href="{% url "home" %}">Actual notes</a></button>
     </div>
   </div>
 
   <div class="filter-container">
-      <form class="search" action="{% url "search" %}" method="get">
-        <img src="{% static "icons/search.svg" %}" alt="search">
-        <input autocomplete="off" type="search" name="query" placeholder="type to search...">
-      </form>
+    <div class="search">
+      <img src="{% static "icons/search.svg" %}" alt="search">
+      <input type="text" placeholder="type to search...">
+    </div>
 
     <div class="category-selector">
       <select id="category" name="category">
@@ -34,25 +34,8 @@
       </select>
     </div>
   </div>
-  <h2>Actual notes</h2>
+  <h2>Archived notes</h2>
   <div class="notes-list">
-    <form class="note new" method="post" action="{% url "home" %}">
-      {% csrf_token %}
-      <textarea name="text" rows="8" cols="10" placeholder="Type to add a note..."></textarea>
-
-      <div class="note-footer">
-        <div class="category-selector">
-          <label class="category-label" for="category">Category</label>
-
-          <select id="category" name="category">
-            {% for category in categories %}
-              <option value="{{ category.name }}">{{ category.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <button type="submit" class="save">Save</button>
-      </div>
-    </form>
     {% for note in notes %}
       <div class="note" style="background-color: {{ note.category.color }};">
         <span>{{ note.text }}</span>
