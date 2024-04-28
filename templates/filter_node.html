@@ -1,6 +1,6 @@
 {% load static %}
   <div class="notes-list">
-    <form class="note new" method="post" action="{% url "home" %}">
+    <form class="note new" method="post" action="{% url "notes-list" %}">
       {% csrf_token %}
       <textarea name="text" rows="8" cols="10" placeholder="Type to add a note..."></textarea>
       <div class="note-footer">
