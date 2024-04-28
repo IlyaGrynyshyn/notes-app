@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from notes.models import Category, CategoryColor, Note
+from notes.models import Category, Note
 
 
 class CategoryViewTest(TestCase):
@@ -12,12 +12,11 @@ class CategoryViewTest(TestCase):
             username="testuser", password="qwerty"
         )
         self.client.login(username="testuser", password="qwerty")
-        self.category_color = CategoryColor.objects.create(color_code="#FFFFFF")
 
         self.category = Category.objects.create(
             user=self.user,
             name="Test Category",
-            color=self.category_color,
+            color="#FFFFFF",
         )
 
     def test_create_category(self):
@@ -51,9 +50,8 @@ class NotesListViewTest(TestCase):
             username="testuser", password="qwerty"
         )
         self.client.login(username="testuser", password="qwerty")
-        self.color = CategoryColor.objects.create(color_code="#FFFFFF")
         self.category = Category.objects.create(
-            user=self.user, name="Test Category", color=self.color
+            user=self.user, name="Test Category", color="white"
         )
         self.note1 = Note.objects.create(
             user=self.user, text="Test Note 1", category=self.category
@@ -88,9 +86,8 @@ class ArchiveNoteViewTest(TestCase):
             username="testuser", password="testpassword"
         )
         self.client.login(username="testuser", password="testpassword")
-        self.color = CategoryColor.objects.create(color_code="#FFFFFF")
         self.category = Category.objects.create(
-            user=self.user, name="Test Category", color=self.color
+            user=self.user, name="Test Category", color="white"
         )
         self.note = Note.objects.create(
             user=self.user, text="Test Note", category=self.category
@@ -117,9 +114,8 @@ class SearchNoteViewTest(TestCase):
             username="testuser", password="testpassword"
         )
         self.client.login(username="testuser", password="testpassword")
-        self.color = CategoryColor.objects.create(color_code="#FFFFFF")
         self.category = Category.objects.create(
-            user=self.user, name="Test Category", color=self.color
+            user=self.user, name="Test Category", color="white"
         )
         self.note1 = Note.objects.create(
             user=self.user, text="Test Note 1", category=self.category, archived=False

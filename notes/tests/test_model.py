@@ -2,18 +2,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
-from notes.models import Category, CategoryColor, Note
-
-
-class CategoryColorModelTest(TestCase):
-
-    def test_color_code_validation(self):
-        color = CategoryColor(color_code="#FFFFFF")
-        color.full_clean()
-        invalid_color = "invalid_color"
-        with self.assertRaises(ValidationError):
-            color = CategoryColor(color_code=invalid_color)
-            color.full_clean()
+from notes.models import Category, Note
 
 
 class CategoryModelTest(TestCase):
@@ -24,20 +13,16 @@ class CategoryModelTest(TestCase):
         )
 
     def test_category_creation(self):
-        color = CategoryColor.objects.create(color_code="#FFFFFF")
         category = Category.objects.create(
-            user=self.user, name="Test Category", color=color
+            user=self.user, name="Test Category", color="White"
         )
         self.assertEqual(category.name, "Test Category")
 
     def test_category_creation_with_unique_name(self):
-        category_color = CategoryColor.objects.create(color_code="#00FF00")
-        Category.objects.create(
-            user=self.user, name="Unique Category", color=category_color
-        )
+        Category.objects.create(user=self.user, name="Unique Category", color="white")
         with self.assertRaises(IntegrityError):
             Category.objects.create(
-                user=self.user, name="Unique Category", color=category_color
+                user=self.user, name="Unique Category", color="white"
             )
 
 
@@ -52,9 +37,8 @@ class NoteModelTest(TestCase):
         self.user = get_user_model().objects.create_user(
             username="test_user", password="test_password"
         )
-        category_color = CategoryColor.objects.create(color_code="#FFFFFF")
         self.category = Category.objects.create(
-            user=self.user, name="Test Category", color=category_color
+            user=self.user, name="Test Category", color="white"
         )
 
     def test_note_creation(self):

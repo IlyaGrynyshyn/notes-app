@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 
-from notes.models import Note, Category, CategoryColor
+from notes.models import Note, Category
 from django.views.generic import ListView, DeleteView
 
 
@@ -31,10 +31,7 @@ class CategoryListView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         category_name = request.POST.get("name")
         color = request.POST.get("color")
-        category_color = CategoryColor.objects.create(color_code=color)
-        Category.objects.create(
-            user=request.user, name=category_name, color=category_color
-        )
+        Category.objects.create(user=request.user, name=category_name, color=color)
         return redirect("notes-list")
 
 
@@ -47,8 +44,7 @@ class CategoryDetailView(LoginRequiredMixin, View):
         if category_name:
             category.name = category_name
         if color:
-            category_color, _ = CategoryColor.objects.get_or_create(color_code=color)
-            category.color = category_color
+            category.color = color
         category.save()
         return redirect("notes-list")
 
@@ -93,7 +89,7 @@ class NoteUpdateView(LoginRequiredMixin, View):
 
 class NoteDeleteView(LoginRequiredMixin, View):
     def post(self, request, note_id):
-        note = Note.objects.get(id=note_id)
+        note = get_object_or_404(Note, id=note_id)
         note.delete()
         return redirect("notes-list")
 
