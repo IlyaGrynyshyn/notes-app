@@ -1,35 +1,6 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notes App</title>
-  <link rel="stylesheet" href="{% static "css/style.css" %}">
-</head>
-
-<body>
-<div class="container">
-  <div class="header">
-    <h1>
-      {% if user.is_authenticated %}
-        <a style="color: black" href="{% url "home" %}">
-          {{ user.get_username|capfirst }}'s notes
-        </a>
-      {% else %}
-        <p>Welcome, new user. Please log in.</p>
-      {% endif %}
-    </h1>
-    <div class="header-bth">
-      <button class="save" id="create-category-btn">Create new category</button>
-      <button class="save"><a href="{% url "get-archive" %}">Archive</a></button>
-      {% if user.is_authenticated %}
-        <burron class="save"><a href="">Log Out</a></burron>
-      {% endif %}
-    </div>
-  </div>
-
+{% block content %}
   <div class="filter-container">
     <form class="search" action="{% url "search" %}" method="get">
       <img src="{% static "icons/search.svg" %}" alt="search">
@@ -43,81 +14,43 @@
       </select>
     </div>
   </div>
-  <div class="filtering">
-    <h4>Filtering</h4>
-    <form action="{% url "home" %}" method="get">
-      <div class="category-filtering">
-        <p>Category:</p>
-        <select name="category" id="category-selector">
-          <option value="">All</option>
-          {% for category in categories %}
-            <option value="{{ category.name }}">{{ category.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <button type="submit">Filter</button>
-    </form>
-  </div>
-  <h2>Actual notes</h2>
-  <div class="notes-list">
-    <form class="note new" method="post" action="{% url "home" %}">
-      {% csrf_token %}
-      <textarea name="text" rows="8" cols="10" placeholder="Type to add a note..."></textarea>
-      <div class="note-footer">
-        <div class="category-selector">
-          <label class="category-label" for="category">Category</label>
-          <select name="category">
-            {% for category in categories %}
-              <option value="{{ category.name }}">{{ category.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        <button type="submit" class="save">Save</button>
-      </div>
-    </form>
-    {% for note in notes %}
-      <div class="note" style="background-color: {{ note.category.color }};">
-        <span>{{ note.text }}</span>
-        <div class="note-footer">
-          <p>Category: {{ note.category }}</p>
-          <div class="note-footer-bth">
-            <button onclick="deleteNote({{ note.id }})">
-              <img src="{% static "icons/delete.svg" %}" alt="delete">
-            </button>
-            <button onclick="archiveNote({{ note.id }})">
-              <img src="{% static "icons/archive.svg" %}" alt="archive">
-            </button>
-          </div>
-        </div>
-      </div>
+  <div id="myBtnContainer">
+    <button class="btn active" onclick="filterSelection('all')"> Show all</button>
+    {% for category in categories %}
+      <button class="btn" onclick="filterSelection('{{ category.name }}')"> {{ category.name }}</button>
     {% endfor %}
   </div>
-</div>
-<div id="popup-create-category" class="popup-create-category">
-  <div class="popup__box">
-    <button class="close-category-popup-btn" id="close-popup-create-category">
-      <img src="{% static "icons/close.svg" %}" alt="">
-    </button>
-    <h5 class="category-title">
-      Create category
-    </h5>
-    <div class="popup-body">
-      <form id="createCategoryForm" action="{% url "category" %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="categoryName">Category name:</label>
-          <input type="text" class="form-control" id="categoryName" name="name">
-        </div>
-        <div class="form-group">
-          <label for="categoryColor">Колір категорії</label>
-          <input type="text" class="form-control" id="categoryColor" name="color">
-        </div>
-        <button type="submit" class="save">Save</button>
-      </form>
+  <h2>Actual notes</h2>
+  <div id="notesContainer">
+    <!-- Тут буде відображуватися відфільтрована інформація -->
+  </div>
+  </div>
+  <div id="popup-create-category" class="popup-create-category">
+    <div class="popup__box">
+      <button class="close-category-popup-btn" id="close-popup-create-category">
+        <img src="{% static "icons/close.svg" %}" alt="">
+      </button>
+      <h3 class="popup-category-title">
+        Create category
+      </h3>
+      <div class="popup-body">
+        <form id="createCategoryForm" action="{% url "category" %}" method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="category-field__label" for="categoryName">Category name:</label>
+            <input class="category-field__input" type="text" class="form-control" id="categoryName" name="name">
+          </div>
+          <div class="form-group">
+            <label class="category-field__label" for="categoryColor">Category color</label>
+            <input class="category-field__input" type="text" class="form-control" id="categoryColor" name="color">
+          </div>
+          <button type="submit" class="category-save-btn">Save</button>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-</body>
+  </body>
+{% endblock content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{% static "js/script.js" %}"></script>
 <script>
@@ -157,7 +90,29 @@
         }
     }
 </script>
+<script>
+    $(document).ready(function () {
+        filterSelection('all');
+    });
 
+    function filterSelection(category) {
+
+        $.ajax({
+            type: "GET",
+            url: "filter/",
+            data: {
+                category: category
+            },
+            success: function (data) {
+                $("#notesContainer").html(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Error:", errorThrown);
+            }
+        });
+    }
+
+</script>
 
 
 </html>

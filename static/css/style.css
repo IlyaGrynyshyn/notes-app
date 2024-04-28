@@ -1,121 +1,121 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
     'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
     'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas,
+    font-family: source-code-pro, Menlo, Monaco, Consolas,
     'Courier New', monospace;
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .dark-mode {
-  background-color: black;
+    background-color: black;
 }
 
 .dark-mode h1 {
-  color: white;
+    color: white;
 }
 
 .container {
-  max-width: 960px;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 15px;
-  padding-left: 15px;
-  min-height: 100vh;
+    max-width: 960px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+    min-height: 100vh;
 }
 
 .notes-list {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(
     auto-fill,
     minmax(250px, 1fr)
   );
 }
 
 .note.new {
-  background-color: #67d7cc;
+    background-color: #67d7cc;
 }
 
 textarea {
-  border: none;
-  resize: none;
-  background-color: #67d7cc;
+    border: none;
+    resize: none;
+    background-color: #67d7cc;
 }
 
 textarea:focus {
-  outline: none;
+    outline: none;
 }
 
 .save {
-  background-color: #e1e1e1;
-  border: none;
-  border-radius: 15px;
-  padding: 5px 10px 5px 10px;
+    background-color: #e1e1e1;
+    border: none;
+    border-radius: 15px;
+    padding: 5px 10px 5px 10px;
 }
 
 .save:hover {
-  background-color: #ededed;
-  cursor: pointer;
+    background-color: #ededed;
+    cursor: pointer;
 }
 
 .note {
-  background-color: #fef68a;
-  border-radius: 10px;
-  padding: 1rem;
-  min-height: 170px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+    background-color: #fef68a;
+    border-radius: 10px;
+    padding: 1rem;
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .note-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
 }
 
 .note-footer-bth {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .filter-container {
-  display: flex;
-  gap: 20px;
-  height: 34px;
-  margin-bottom: 24px;
+    display: flex;
+    gap: 20px;
+    height: 34px;
+    margin-bottom: 24px;
 }
 
 .search {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  background-color: rgb(233, 233, 233);
-  border-radius: 10px;
-  padding: 5px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    background-color: rgb(233, 233, 233);
+    border-radius: 10px;
+    padding: 5px;
 }
 
 .search input {
-  border: none;
-  background-color: rgb(233, 233, 233);
-  width: 100%;
+    border: none;
+    background-color: rgb(233, 233, 233);
+    width: 100%;
 }
 
 .search input:focus {
-  outline: none;
+    outline: none;
 }
 
 .note-footer {
@@ -130,17 +130,17 @@ textarea:focus {
 
 /* Стилі для тексту "Category:" */
 .new-note-footer::before {
-/*     content: "Category:"; */
+    /*     content: "Category:"; */
     margin-right: 10px;
 }
 
 select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  height: min-content;
-  background-color: #fff; /* Фоновий колір */
-  cursor: pointer;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: min-content;
+    background-color: #fff; /* Фоновий колір */
+    cursor: pointer;
 }
 
 /* Зміна стилю при наведенні на випадаючий список */
@@ -173,69 +173,154 @@ select:focus {
     border: 2px solid #000;
 }
 
-.category-selector{
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-right: 10px
+.category-selector {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-right: 10px
 }
+
 .category-label {
-  display: flex;
-  align-items: center;
-  height: min-content;
+    display: flex;
+    align-items: center;
+    height: min-content;
 }
 
 a {
-  text-decoration: none;
-  width: 24px;
-  height: 24px;
+    text-decoration: none;
+    width: 24px;
+    height: 24px;
 }
 
-.color:nth-child(1) { background-color: #ff0000; }
-.color:nth-child(2) { background-color: #00ff00; }
-.color:nth-child(3) { background-color: #0000ff; }
-.color:nth-child(4) { background-color: #ffff00; }
-.color:nth-child(5) { background-color: #ff00ff; }
-
-
-.popup-create-category{
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 99998;
-  background-color: rgba(0, 0, 0, .3);
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  overflow-y: auto;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity .4s, visibility .4s;
+.color:nth-child(1) {
+    background-color: #ff0000;
 }
 
-.popup__box{
-  position: relative;
-  max-width: 500px;
-  padding: 45px;
-  z-index: 1;
-  background-color: #fff;
-  box-shadow: 0px 0px 17px -7px rgba(34, 60, 80, 0.2);
+.color:nth-child(2) {
+    background-color: #00ff00;
 }
 
-.close-category-popup-btn{
-  border: none;
-  background-color: transparent;
-  padding: 5px;
-  position: absolute;
-  top: 8px;
-  right: 8px;
+.color:nth-child(3) {
+    background-color: #0000ff;
+}
+
+.color:nth-child(4) {
+    background-color: #ffff00;
+}
+
+.color:nth-child(5) {
+    background-color: #ff00ff;
+}
+
+
+.popup-create-category {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99998;
+    background-color: rgba(0, 0, 0, .3);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .4s, visibility .4s;
+}
+
+.popup__box {
+    position: relative;
+    max-width: 500px;
+    padding: 45px;
+    z-index: 1;
+    background-color: #fff;
+    box-shadow: 0px 0px 17px -7px rgba(34, 60, 80, 0.2);
+}
+
+.close-category-popup-btn {
+    border: none;
+    background-color: transparent;
+    padding: 5px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
 
 }
 
-.popup-create-category.open{
-  visibility: visible;
-  opacity: 1;
+.popup-create-category.open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.text-field {
+    margin-bottom: 1rem;
+}
+
+.category-field__label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.category-field__input {
+    display: block;
+    margin: 10px 0;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.popup-category-title {
+    text-align: center;
+    justify-content: center;
+}
+
+.category-save-btn {
+    width: 100%;
+    height: 30px;
+    margin-top: 10px;
+
+    background-color: #8b8b8b;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+/* The "show" class is added to the filtered elements */
+.show {
+    display: block;
+}
+
+/* Style the buttons */
+.btn {
+    border: none;
+    outline: none;
+    padding: 12px 16px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Add a light grey background on mouse-over */
+.btn:hover {
+    background-color: #ddd;
+}
+
+/* Add a dark background to the active button */
+.btn.active {
+    background-color: #666;
+    color: white;
 }
 

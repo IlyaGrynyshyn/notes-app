@@ -1,86 +1,96 @@
-from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from notes.models import Note, Category
+from notes.models import Note, Category, CategoryColor
 from django.views.generic import ListView
 
 
-class CategoryView(View):
+class FilterNotesView(LoginRequiredMixin, ListView):
+    model = Note
+    template_name = "filter_node.html"
+    context_object_name = "notes"
+    ordering = "-created_at"
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(user=self.request.user, archived=False)
+        category = self.request.GET.get("category")
+        if category and category != "all":
+            queryset = queryset.filter(category__name=category)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.filter(user=self.request.user)
+        return context
+
+
+class CategoryView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        categories = Category.objects.all()
-        context = {'categories': categories}
-        return
+        categories = Category.objects.filter(user=request.user)
+        context = {"categories": categories}
+        return JsonResponse(context)
 
     def post(self, request, *args, **kwargs):
-        category_name = request.POST.get('name')
-        color = request.POST.get('color')
-        Category.objects.create(user=request.user, name=category_name, color=color)
-        return redirect('home')
+        category_name = request.POST.get("name")
+        color = request.POST.get("color")
+        category_color = CategoryColor.objects.create(color_code=color)
+        Category.objects.create(
+            user=request.user, name=category_name, color=category_color
+        )
+        return redirect("home")
 
 
-class HomeView(View):
+class HomeView(LoginRequiredMixin, View):
     def get(self, request):
         queryset = Note.objects.filter(user=request.user).filter(archived=False)
-
-        sort_by = request.GET.get('sort_by')
-        if sort_by == 'date':
-            queryset = queryset.order_by('created_at')
-        elif sort_by == 'word_count':
-            queryset = sorted(queryset, key=lambda x: len(x.text.split()), reverse=True)
-        elif sort_by == 'unique_words':
-            queryset = sorted(queryset, key=lambda x: len(set(x.text.split())), reverse=True)
-
-        category = request.GET.get('category')
-        if category:
-            queryset = queryset.filter(category__name=category)
-
-        # notes = Note.objects.filter(user=request.user).order_by("-created_at").filter(
-        #     Q(category__in=self.request.GET.getlist('category'))
-        # )
-
         categories = Category.objects.filter(user=request.user)
-        return render(request, 'home.html', {'notes': queryset, 'categories': categories})
+        return render(
+            request, "home.html", {"notes": queryset, "categories": categories}
+        )
 
     def post(self, request):
-        text = request.POST.get('text')
-        category_name = request.POST.get('category')
+        text = request.POST.get("text")
+        category_name = request.POST.get("category")
         category, created = Category.objects.get_or_create(name=category_name)
         Note.objects.create(user=request.user, text=text, category=category)
-        return redirect('home')
+        return redirect("home")
 
 
-class DeleteNoteView(View):
+class DeleteNoteView(LoginRequiredMixin, View):
     def post(self, request, note_id):
         note = Note.objects.get(id=note_id)
         note.delete()
-        return redirect('home')
+        return redirect("home")
 
 
-class ArchiveNoteView(View):
+class ArchiveNoteView(LoginRequiredMixin, View):
     def get(self, request):
-        notes = Note.objects.filter(user=request.user).filter(archived=True).order_by('-created_at')
+        notes = (
+            Note.objects.filter(user=request.user)
+            .filter(archived=True)
+            .order_by("-created_at")
+        )
         categories = Category.objects.filter(user=request.user)
-        context = {'notes': notes, 'categories': categories}
+        context = {"notes": notes, "categories": categories}
         return render(request, "archive.html", context)
 
     def post(self, request, note_id):
-        note = Note.objects.get(id=note_id)
+        note = get_object_or_404(Note, id=note_id)
         note.archived = not note.archived
         note.save()
-        return redirect('home')
+        return redirect("home")
 
 
-class SearchNoteView(View):
+class SearchNoteView(LoginRequiredMixin, View):
     def get(self, request):
-        query = request.GET.get('query')
-        notes = Note.objects.filter(user=request.user).filter(archived=False).filter(text__contains=query).order_by('-created_at')
-        categories = Category.objects.filter(user=request.user)
-        context = {'notes': notes, 'categories': categories}
-        return render(request, 'archive.html', context)
-
-class FilterMovieView(View):
-    def get_queryset(self):
-        queryset = Note.objects.filter(
-            Q(category__in=self.request.GET.getlist['category'])
+        query = request.GET.get("query")
+        notes = (
+            Note.objects.filter(user=request.user)
+            .filter(archived=False)
+            .filter(text__contains=query)
+            .order_by("-created_at")
         )
-        return queryset
+        categories = Category.objects.filter(user=request.user)
+        context = {"notes": notes, "categories": categories}
+        return render(request, "archive.html", context)
