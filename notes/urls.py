@@ -4,10 +4,12 @@ from .views import (
     NoteUpdateView,
     ArchiveNoteView,
     CategoryListView,
-    CategoryDetailView,
+    CategoryUpdateView,
     SearchNoteView,
     FilterNotesView,
     NoteDeleteView,
+    NoteUpdateView,
+    CategoryDeleteView,
 )
 
 urlpatterns = [
@@ -15,10 +17,15 @@ urlpatterns = [
     path("category/", CategoryListView.as_view(), name="category"),
     path(
         "category/<int:category_id>",
-        CategoryDetailView.as_view(),
-        name="detail-category",
+        CategoryUpdateView.as_view(),
+        name="category-update",
     ),
-    path("note/<int:note_id>/", NoteUpdateView.as_view(), name="note-delete"),
+    path(
+        "category/<int:category_id>/delete",
+        CategoryDeleteView.as_view(),
+        name="category-delete",
+    ),
+    path("note/<int:note_id>/edit/", NoteUpdateView.as_view(), name="note-update"),
     path("note/<int:note_id>/delete/", NoteDeleteView.as_view(), name="note-delete"),
     path("archive/", ArchiveNoteView.as_view(), name="get-archive"),
     path("archive/<int:note_id>/", ArchiveNoteView.as_view(), name="archive_note"),

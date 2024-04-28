@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
-
+from notes.forms import NoteForm, CategoryForm
 from notes.models import Note, Category
 from django.views.generic import ListView, DeleteView
 
@@ -35,24 +35,30 @@ class CategoryListView(LoginRequiredMixin, View):
         return redirect("notes-list")
 
 
-class CategoryDetailView(LoginRequiredMixin, View):
-    def put(self, request, *args, **kwargs):
-        category_id = kwargs.get("category_id")
+class CategoryUpdateView(LoginRequiredMixin, View):
+    def get(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
-        category_name = request.POST.get("name")
-        color = request.POST.get("color")
-        if category_name:
-            category.name = category_name
-        if color:
-            category.color = color
-        category.save()
-        return redirect("notes-list")
+        form = CategoryForm(instance=category)
+        return render(
+            request, "category_edit.html", {"form": form, "category": category}
+        )
 
-    def delete(self, request, *args, **kwargs):
-        category_id = kwargs.get("category_id")
+    def post(self, request, category_id):
+        category = get_object_or_404(Category, id=category_id)
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect("notes-list")
+        return render(
+            request, "category_edit.html", {"form": form, "category": category}
+        )
+
+
+class CategoryDeleteView(LoginRequiredMixin, View):
+    def post(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
         category.delete()
-        return HttpResponse(status=201)
+        return redirect("notes-list")
 
 
 class NotesListView(LoginRequiredMixin, View):
@@ -72,19 +78,18 @@ class NotesListView(LoginRequiredMixin, View):
 
 
 class NoteUpdateView(LoginRequiredMixin, View):
+    def get(self, request, note_id):
+        note = get_object_or_404(Note, id=note_id, user=request.user)
+        form = NoteForm(instance=note)
+        return render(request, "note_edit.html", {"form": form, "note": note})
+
     def post(self, request, note_id):
-        note = get_object_or_404(Note, id=note_id)
-        text = request.POST.get("text")
-        category_name = request.POST.get("category")
-        if category_name:
-            category, created = Category.objects.get(
-                name=category_name, user=request.user
-            )
-            note.category = category
-        if text:
-            note.text = text
-        note.save()
-        return redirect("notes-list")
+        note = get_object_or_404(Note, id=note_id, user=request.user)
+        form = NoteForm(request.POST, instance=note)
+        if form.is_valid():
+            form.save()
+            return redirect("notes-list")
+        return render(request, "note_edit.html", {"form": form, "note": note})
 
 
 class NoteDeleteView(LoginRequiredMixin, View):
