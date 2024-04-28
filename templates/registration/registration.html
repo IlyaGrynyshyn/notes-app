@@ -1,0 +1,155 @@
+{% load static %}
+  <style>
+      .c-error .c-validation {
+          background: #ffddde !important;
+          padding: 10px !important;
+          border-radius: 0 !important;
+          position: relative;
+          display: inline-block !important;
+          box-shadow: 1px 1px 1px #aaaaaa;
+          margin-top: 10px;
+          color: #666;
+      }
+
+      .c-validation:before {
+          content: '';
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-bottom: 10px solid #ffddde;
+          position: absolute;
+          top: -10px;
+      }
+
+      .errors {
+          font-size: 16px;
+          color: #909090;
+          padding: 0 11px;
+          line-height: 26px;
+          background: #ffddde;
+          position: relative;
+          font-weight: 400;
+          border-radius: 0 0 3px 3px;
+      }
+  </style>
+  <!-- ===================== Ordering =====================-->
+  <section class="section cabinet">
+    <div class="container">
+      <div class="cabinet__inner row">
+        <div class="login">
+          <div class="login__body">
+            {% if form.errors %}
+              <div class="errors">
+                <ul>
+                  {% for field in form %}
+                    {% for error in field.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <h3 class="login__title">Pеєстрація</h3>
+            <h5 class="login__sign-in">Є аккаунт ? <a href="{% url 'account:login' %}">Ввійти</a>
+            </h5>
+            <div class="simple-content">
+              <form action="" class="form" method="post">
+                {% csrf_token %}
+                <div class="registration">
+                  <div class="registration-block-content">
+                    <fieldset class="form-horizontal">
+                      <div class="form-group form__group required row-register_email">
+                        <label class="control-label col-sm-12">Ваш логін</label>
+                        <div class="col-sm-12">
+                          {{ form.username }}
+                          {% if form.email.errors %}
+                            <div class="c-error">
+                              <div class="c-validation">
+                                {{ form.username.errors }}
+                              </div>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="form-group form__group required row-register_email">
+                        <label class="control-label col-sm-12">Ваша
+                          почта</label>
+                        <div class="col-sm-12">
+                          {{ form.email }}
+                          {% if form.email.errors %}
+                            <div class="c-error">
+                              <div class="c-validation">
+                                {{ form.email.errors }}
+                              </div>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="form-group form__group required row-register_email">
+                        <label class="control-label col-sm-12">Контактний
+                          телефон</label>
+                        <div class="col-sm-12">
+                          {{ form.phone }}
+                          {% if form.phone.errors %}
+                            <div class="c-error">
+                              <div class="c-validation">
+                                {{ form.phone.errors }}
+                              </div>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="form-group form__group required row-register_email">
+                        <label class="control-label col-sm-12">Ваше
+                          ім'я</label>
+                        <div class="col-sm-12">
+                          {{ form.first_name }}
+                          {% if form.first_name.errors %}
+                            <div class="c-error">
+                              <div class="c-validation">
+                                {{ form.first_name.errors }}
+                              </div>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="form-group form__group required row-register_password">
+                        <label class="control-label col-sm-12"
+                               for="register_password">Пароль</label>
+                        <div class="col-sm-12">
+                          {{ form.password1 }}
+                        </div>
+                      </div>
+                      <div class="form-group form__group required row-register_confirm_password">
+                        <label class="control-label col-sm-12">Подтвердите
+                          пароль</label>
+                        <div class="col-sm-12">
+                          {{ form.password2 }}
+                          {% if form.non_field_errors %}
+                            <div class="c-error">
+                              <div class="c-validation">
+                                {{ form.non_field_errors }}
+                              </div>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </fieldset>
+                    <br><br>
+                    <div class="button-block buttons">
+                      <button class="button_oc form__submit login__submit btn-red btn-blick"
+                              type="submit"><span>Продовжити</span></button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ===================== /.Ordering =====================-->
+

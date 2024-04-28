@@ -12,39 +12,61 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1>Notes</h1>
+    <h1>
+      {% if user.is_authenticated %}
+        <a style="color: black" href="{% url "home" %}">
+          {{ user.get_username|capfirst }}'s notes
+        </a>
+      {% else %}
+        <p>Welcome, new user. Please log in.</p>
+      {% endif %}
+    </h1>
     <div class="header-bth">
       <button class="save" id="create-category-btn">Create new category</button>
       <button class="save"><a href="{% url "get-archive" %}">Archive</a></button>
+      {% if user.is_authenticated %}
+        <burron class="save"><a href="">Log Out</a></burron>
+      {% endif %}
     </div>
   </div>
 
   <div class="filter-container">
-      <form class="search" action="{% url "search" %}" method="get">
-        <img src="{% static "icons/search.svg" %}" alt="search">
-        <input autocomplete="off" type="search" name="query" placeholder="type to search...">
-      </form>
-
+    <form class="search" action="{% url "search" %}" method="get">
+      <img src="{% static "icons/search.svg" %}" alt="search">
+      <input autocomplete="off" type="search" name="query" placeholder="type to search...">
+    </form>
     <div class="category-selector">
-      <select id="category" name="category">
-        <option value="personal">Personal</option>
-        <option value="work">Work</option>
-        <option value="study">Study</option>
-        <option value="other">Other</option>
+      <select id="ordering-notes" name="order-by" onchange="filterData()">
+        <option value="date_created">Дата створення</option>
+        <option value="word_count">Кількість слів</option>
+        <option value="unique_word_count">Унікальні слова</option>
       </select>
     </div>
+  </div>
+  <div class="filtering">
+    <h4>Filtering</h4>
+    <form action="{% url "home" %}" method="get">
+      <div class="category-filtering">
+        <p>Category:</p>
+        <select name="category" id="category-selector">
+          <option value="">All</option>
+          {% for category in categories %}
+            <option value="{{ category.name }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit">Filter</button>
+    </form>
   </div>
   <h2>Actual notes</h2>
   <div class="notes-list">
     <form class="note new" method="post" action="{% url "home" %}">
       {% csrf_token %}
       <textarea name="text" rows="8" cols="10" placeholder="Type to add a note..."></textarea>
-
       <div class="note-footer">
         <div class="category-selector">
           <label class="category-label" for="category">Category</label>
-
-          <select id="category" name="category">
+          <select name="category">
             {% for category in categories %}
               <option value="{{ category.name }}">{{ category.name }}</option>
             {% endfor %}
@@ -135,6 +157,7 @@
         }
     }
 </script>
+
 
 
 </html>

@@ -13,7 +13,7 @@ class Category(models.Model):
 class Note(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     text = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, db_index=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, db_index=True, related_name='note')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     archived = models.BooleanField(default=False, db_index=True)
 
@@ -24,6 +24,5 @@ class Note(models.Model):
     def word_count(self):
         return len(self.text.split())
 
-    @property
-    def unique_word_count(self):
-        return len(set(self.text.split()))
+    class Meta:
+        ordering = ['-created_at']

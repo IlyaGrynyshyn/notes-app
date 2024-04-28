@@ -12,7 +12,15 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1><a style="color: black" href="{% url "home" %}">Notes</a></h1>
+    <h1>
+      {% if user.is_authenticated %}
+        <a style="color: black" href="{% url "home" %}">
+          {{ user.get_username|capfirst }}'s notes
+        </a>
+      {% else %}
+        <p>Welcome, new user. Please log in.</p>
+      {% endif %}
+    </h1>
     <div class="header-bth">
       <button class="save" id="create-category-btn">Create new category</button>
       <button class="save"><a href="{% url "home" %}">Actual notes</a></button>
