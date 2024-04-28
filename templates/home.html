@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <div class="filter-container">
+    <form class="search" action="{% url "search" %}" method="get">
+      <img src="{% static "icons/search.svg" %}" alt="search">
+      <input autocomplete="off" type="search" name="query" placeholder="type to search...">
+    </form>
+    <div class="category-selector">
+      <select id="ordering-notes" name="order-by" onchange="filterData()">
+        <option value="date_created">Дата створення</option>
+        <option value="word_count">Кількість слів</option>
+        <option value="unique_word_count">Унікальні слова</option>
+      </select>
+    </div>
+  </div>
+  <div id="myBtnContainer">
+    <button class="btn active" onclick="filterSelection('all')"> Show all</button>
+    {% for category in categories %}
+      <button class="btn" onclick="filterSelection('{{ category.name }}')"> {{ category.name }}</button>
+    {% endfor %}
+  </div>
+  <h2>Actual notes</h2>
+  <div id="notesContainer">
+    <!-- Тут буде відображуватися відфільтрована інформація -->
+  </div>
+  </div>
+  <div id="popup-create-category" class="popup-create-category">
+    <div class="popup__box">
+      <button class="close-category-popup-btn" id="close-popup-create-category">
+        <img src="{% static "icons/close.svg" %}" alt="">
+      </button>
+      <h3 class="popup-category-title">
+        Create category
+      </h3>
+      <div class="popup-body">
+        <form id="createCategoryForm" action="{% url "category" %}" method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="category-field__label" for="categoryName">Category name:</label>
+            <input class="category-field__input" type="text" class="form-control" id="categoryName" name="name">
+          </div>
+          <div class="form-group">
+            <label class="category-field__label" for="categoryColor">Category color</label>
+            <input class="category-field__input" type="text" class="form-control" id="categoryColor" name="color">
+          </div>
+          <button type="submit" class="category-save-btn">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </body>
+{% endblock content %}
+
+</html>

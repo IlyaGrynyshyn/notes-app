@@ -1,0 +1,37 @@
+{% load static %}
+<div class="notes-list">
+  <form class="note new" method="post" action="{% url "notes-list" %}">
+    {% csrf_token %}
+    <textarea name="text" rows="8" cols="10" placeholder="Type to add a note..."></textarea>
+    <div class="note-footer">
+      <div class="category-selector">
+        <label class="category-label" for="category">Category</label>
+        <select name="category">
+          {% for category in categories %}
+            <option value="{{ category.name }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="save">Save</button>
+    </div>
+  </form>
+  {% for note in notes %}
+    <div class="note" style="background-color: {{ note.category.color }};">
+      <span>{{ note.text }}</span>
+      <div class="note-footer">
+        <p>Category: {{ note.category }}</p>
+        <div class="note-footer-bth">
+          <button>
+            <a href="{% url "note-update" note_id=note.id %}"><img src="{% static "icons/edit.svg" %}" alt=""></a>
+          </button>
+          <button onclick="deleteNote({{ note.id }})">
+            <img src="{% static "icons/delete.svg" %}" alt="delete">
+          </button>
+          <button onclick="archiveNote({{ note.id }})">
+            <img src="{% static "icons/archive.svg" %}" alt="archive">
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
