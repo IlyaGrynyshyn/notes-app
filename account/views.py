@@ -10,12 +10,12 @@ from account.forms import RegistrationForm, LoginForm
 class LogoutUserView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect(reverse_lazy("home"))
+        return HttpResponseRedirect(reverse_lazy("notes-list"))
 
 
 class LoginView(views.LoginView):
     form_class = LoginForm
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("notes-list")
 
 
 class RegistrationView(FormView):

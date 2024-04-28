@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+
+
 from notes.models import Note, Category, CategoryColor
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView
 
 
 class FilterNotesView(LoginRequiredMixin, ListView):
@@ -25,12 +27,7 @@ class FilterNotesView(LoginRequiredMixin, ListView):
         return context
 
 
-class CategoryView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        categories = Category.objects.filter(user=request.user)
-        context = {"categories": categories}
-        return JsonResponse(context)
-
+class CategoryListView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         category_name = request.POST.get("name")
         color = request.POST.get("color")
@@ -38,10 +35,31 @@ class CategoryView(LoginRequiredMixin, View):
         Category.objects.create(
             user=request.user, name=category_name, color=category_color
         )
-        return redirect("home")
+        return redirect("notes-list")
 
 
-class HomeView(LoginRequiredMixin, View):
+class CategoryDetailView(LoginRequiredMixin, View):
+    def put(self, request, *args, **kwargs):
+        category_id = kwargs.get("category_id")
+        category = get_object_or_404(Category, id=category_id)
+        category_name = request.POST.get("name")
+        color = request.POST.get("color")
+        if category_name:
+            category.name = category_name
+        if color:
+            category_color, _ = CategoryColor.objects.get_or_create(color_code=color)
+            category.color = category_color
+        category.save()
+        return redirect("notes-list")
+
+    def delete(self, request, *args, **kwargs):
+        category_id = kwargs.get("category_id")
+        category = get_object_or_404(Category, id=category_id)
+        category.delete()
+        return HttpResponse(status=201)
+
+
+class NotesListView(LoginRequiredMixin, View):
     def get(self, request):
         queryset = Note.objects.filter(user=request.user).filter(archived=False)
         categories = Category.objects.filter(user=request.user)
@@ -54,14 +72,30 @@ class HomeView(LoginRequiredMixin, View):
         category_name = request.POST.get("category")
         category, created = Category.objects.get_or_create(name=category_name)
         Note.objects.create(user=request.user, text=text, category=category)
-        return redirect("home")
+        return redirect("notes-list")
 
 
-class DeleteNoteView(LoginRequiredMixin, View):
+class NoteUpdateView(LoginRequiredMixin, View):
+    def post(self, request, note_id):
+        note = get_object_or_404(Note, id=note_id)
+        text = request.POST.get("text")
+        category_name = request.POST.get("category")
+        if category_name:
+            category, created = Category.objects.get(
+                name=category_name, user=request.user
+            )
+            note.category = category
+        if text:
+            note.text = text
+        note.save()
+        return redirect("notes-list")
+
+
+class NoteDeleteView(LoginRequiredMixin, View):
     def post(self, request, note_id):
         note = Note.objects.get(id=note_id)
         note.delete()
-        return redirect("home")
+        return redirect("notes-list")
 
 
 class ArchiveNoteView(LoginRequiredMixin, View):
@@ -79,7 +113,7 @@ class ArchiveNoteView(LoginRequiredMixin, View):
         note = get_object_or_404(Note, id=note_id)
         note.archived = not note.archived
         note.save()
-        return redirect("home")
+        return redirect("notes-list")
 
 
 class SearchNoteView(LoginRequiredMixin, View):
