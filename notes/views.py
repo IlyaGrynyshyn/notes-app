@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
@@ -9,16 +10,34 @@ from django.views.generic import ListView, DeleteView
 
 
 class FilterNotesView(LoginRequiredMixin, ListView):
+    """
+    This class displays the list of notes with the ability to filter by category and sorting by various parameters
+    such as creation date, word count, and unique words.
+    """
+
     model = Note
     template_name = "filter_node.html"
     context_object_name = "notes"
     ordering = "-created_at"
 
     def get_queryset(self):
+        query_params = self.request.GET
         queryset = super().get_queryset().filter(user=self.request.user, archived=False)
-        category = self.request.GET.get("category")
+        category = query_params.get("category")
         if category and category != "all":
             queryset = queryset.filter(category__name=category)
+
+        order_by = query_params.get("order_by")
+        if order_by == "created_at":
+            queryset = queryset.order_by("created_at")
+        elif order_by == "word_count":
+            queryset = queryset.annotate(
+                word_count=Count("text", function="LENGTH")
+            ).order_by("-word_count")
+        elif order_by == "unique_word_count":
+            queryset = queryset.annotate(
+                unique_word_count=Count("text", distinct=True, function="LENGTH")
+            ).order_by("-unique_word_count")
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -28,6 +47,10 @@ class FilterNotesView(LoginRequiredMixin, ListView):
 
 
 class CategoryListView(LoginRequiredMixin, View):
+    """
+    This class handles the creation of a new category for notes.
+    """
+
     def post(self, request, *args, **kwargs):
         category_name = request.POST.get("name")
         color = request.POST.get("color")
@@ -36,6 +59,10 @@ class CategoryListView(LoginRequiredMixin, View):
 
 
 class CategoryUpdateView(LoginRequiredMixin, View):
+    """
+    This class displays the form to edit a category.
+    """
+
     def get(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
         form = CategoryForm(instance=category)
@@ -55,6 +82,10 @@ class CategoryUpdateView(LoginRequiredMixin, View):
 
 
 class CategoryDeleteView(LoginRequiredMixin, View):
+    """
+    This class handles the deletion of a category.
+    """
+
     def post(self, request, category_id):
         category = get_object_or_404(Category, id=category_id)
         category.delete()
@@ -62,6 +93,10 @@ class CategoryDeleteView(LoginRequiredMixin, View):
 
 
 class NotesListView(LoginRequiredMixin, View):
+    """
+    This class displays the list of notes and form to create a new note.
+    """
+
     def get(self, request):
         queryset = Note.objects.filter(user=request.user).filter(archived=False)
         categories = Category.objects.filter(user=request.user)
@@ -78,6 +113,10 @@ class NotesListView(LoginRequiredMixin, View):
 
 
 class NoteUpdateView(LoginRequiredMixin, View):
+    """
+    This class displays the form to edit an existing note.
+    """
+
     def get(self, request, note_id):
         note = get_object_or_404(Note, id=note_id, user=request.user)
         form = NoteForm(instance=note)
@@ -93,6 +132,10 @@ class NoteUpdateView(LoginRequiredMixin, View):
 
 
 class NoteDeleteView(LoginRequiredMixin, View):
+    """
+    This class handles the deletion of a note.
+    """
+
     def post(self, request, note_id):
         note = get_object_or_404(Note, id=note_id)
         note.delete()
@@ -100,6 +143,10 @@ class NoteDeleteView(LoginRequiredMixin, View):
 
 
 class ArchiveNoteView(LoginRequiredMixin, View):
+    """
+    This class displays archived notes and provides functionality to toggle their archived status.
+    """
+
     def get(self, request):
         notes = (
             Note.objects.filter(user=request.user)
@@ -118,6 +165,10 @@ class ArchiveNoteView(LoginRequiredMixin, View):
 
 
 class SearchNoteView(LoginRequiredMixin, View):
+    """
+    This class displays search results for notes based on a text query.
+    """
+
     def get(self, request):
         query = request.GET.get("query")
         notes = (

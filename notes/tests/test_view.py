@@ -27,19 +27,19 @@ class CategoryViewTest(TestCase):
         self.assertTrue(Category.objects.filter(name="New Category").exists())
 
     def test_update_category(self):
-        response = self.client.put(
-            reverse("detail-category", kwargs={"category_id": self.category.id}),
+        response = self.client.post(
+            reverse("category-update", kwargs={"category_id": self.category.id}),
             {"name": "New Category", "color": "#FFFFFF"},
         )
         self.assertEqual(response.status_code, 302)
         self.category.refresh_from_db()
-        self.assertNotEquals(self.category.name, "New Category")
+        self.assertEquals(self.category.name, "New Category")
 
     def test_delete_category(self):
-        response = self.client.delete(
-            reverse("detail-category", kwargs={"category_id": self.category.id})
+        response = self.client.post(
+            reverse("category-delete", kwargs={"category_id": self.category.id})
         )
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 302)
         self.assertFalse(Category.objects.filter(name="Test Category").exists())
 
 
