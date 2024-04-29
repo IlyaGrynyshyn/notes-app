@@ -46,11 +46,18 @@
           {% csrf_token %}
           <div class="form-group">
             <label class="category-field__label" for="categoryName">Category name:</label>
-            <input class="category-field__input" type="text" class="form-control" id="categoryName" name="name">
+            <input class="category-field__input" type="text" id="categoryName" name="name">
           </div>
           <div class="form-group">
-            <label class="category-field__label" for="categoryColor">Category color</label>
-            <input class="category-field__input" type="text" class="form-control" id="categoryColor" name="color">
+            <label for="color-picker">Color:</label>
+            <div class="color-picker">
+              <input type="hidden" id="color" name="color">
+              <div class="color" style="background-color: #cfe027;" data-color="#ff0000"></div>
+              <div class="color" style="background-color: rgba(5,115,5,0.62);" data-color="#00ff00"></div>
+              <div class="color" style="background-color: #3232ff;" data-color="#0000ff"></div>
+              <div class="color" style="background-color: #6804bb;" data-color="#ffff00"></div>
+              <div class="color" style="background-color: #00ffff;" data-color="#00ffff"></div>
+            </div>
           </div>
           <button type="submit" class="category-save-btn">Save</button>
         </form>

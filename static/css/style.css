@@ -158,6 +158,7 @@ select:focus {
 .color-picker {
     display: flex;
     justify-content: space-between;
+    padding: 10px 0;
 }
 
 .color {
@@ -261,6 +262,8 @@ a {
 .category-field__label {
     display: block;
     margin-bottom: 0.25rem;
+    padding: 0 0 5px 0;
+    font-size: 18px;
 }
 
 .category-field__input {
