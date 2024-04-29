@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from django.urls import reverse, reverse_lazy
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -120,7 +121,8 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-from django.urls import reverse, reverse_lazy
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
+
 
 LOGIN_URL = reverse_lazy("account:login")
 LOGIN_REDIRECT_URL = reverse_lazy("notes-list")
