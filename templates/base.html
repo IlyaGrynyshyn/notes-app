@@ -115,11 +115,32 @@
 
     function filterSelection(category) {
 
+
         $.ajax({
             type: "GET",
             url: "filter/",
             data: {
                 category: category
+
+            },
+            success: function (data) {
+                $("#notesContainer").html(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Error:", errorThrown);
+            }
+        });
+    }
+    function orderbySelection() {
+        var selectElement = document.getElementById("ordering-notes");
+        var selectedValue = selectElement.value;
+        console.log(selectedValue)
+
+        $.ajax({
+            type: "GET",
+            url: "filter/",
+            data: {
+                order_by: selectedValue
             },
             success: function (data) {
                 $("#notesContainer").html(data);
