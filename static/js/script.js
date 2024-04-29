@@ -31,3 +31,16 @@ for (var i = 0; i < btns.length; i++) {
     this.className += " active";
   });
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const colorPicker = document.querySelector('.color-picker');
+  const colorInput = document.getElementById('color');
+
+  colorPicker.addEventListener('click', function(event) {
+    const selectedColor = event.target.dataset.color;
+    if (selectedColor) {
+      colorInput.value = selectedColor;
+    }
+  });
+});
