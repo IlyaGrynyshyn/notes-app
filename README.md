@@ -19,11 +19,6 @@ You can access the Notes app project by this url http://159.223.234.162/.
 - Category Management: Users can categorize their notes by assigning them to specific categories. 
 - Sort Notes: Users can sort notes by creation date, total word count, unique word count, or category.
 
-## Features
-
-- CRUD for notes and categories 
-- CRUD for archived notes
-- Filtering by category and sorting
 
 ## Technologies Used
 
