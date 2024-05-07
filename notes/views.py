@@ -98,7 +98,11 @@ class NotesListView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
-        queryset = Note.objects.filter(user=request.user).filter(archived=False)
+        queryset = (
+            Note.objects.filter(user=request.user)
+            .filter(archived=False)
+            .select_related("category")
+        )
         categories = Category.objects.filter(user=request.user)
         return render(
             request, "home.html", {"notes": queryset, "categories": categories}
@@ -152,6 +156,7 @@ class ArchiveNoteView(LoginRequiredMixin, View):
             Note.objects.filter(user=request.user)
             .filter(archived=True)
             .order_by("-created_at")
+            .select_related("category")
         )
         categories = Category.objects.filter(user=request.user)
         context = {"notes": notes, "categories": categories}
@@ -176,6 +181,7 @@ class SearchNoteView(LoginRequiredMixin, View):
             .filter(archived=False)
             .filter(text__contains=query)
             .order_by("-created_at")
+            .select_related("category")
         )
         categories = Category.objects.filter(user=request.user)
         context = {"notes": notes, "categories": categories}
