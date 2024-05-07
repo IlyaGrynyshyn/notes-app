@@ -19,6 +19,7 @@ class FilterNotesView(LoginRequiredMixin, ListView):
     template_name = "filter_node.html"
     context_object_name = "notes"
     ordering = "-created_at"
+    paginate_by = 5
 
     def get_queryset(self):
         query_params = self.request.GET
